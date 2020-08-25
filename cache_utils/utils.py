@@ -4,7 +4,7 @@ from django.utils.encoding  import smart_unicode
 CONTROL_CHARACTERS = set([chr(i) for i in range(0,33)])
 CONTROL_CHARACTERS.add(chr(127))
 
-def sanitize_memcached_key(key, max_length=250):
+def sanitize_memcached_key(key, max_length=200):
     """ Removes control characters and ensures that key will
         not hit the memcached key length limit by replacing
         the key tail with md5 hash if key is too long.
