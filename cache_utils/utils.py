@@ -1,5 +1,5 @@
 from hashlib import md5
-from django.utils.encoding  import smart_unicode
+from django.utils.encoding  import smart_text
 
 CONTROL_CHARACTERS = set([chr(i) for i in range(0,33)])
 CONTROL_CHARACTERS.add(chr(127))
@@ -18,15 +18,18 @@ def sanitize_memcached_key(key, max_length=200):
 def _args_to_unicode(args, kwargs):
     key = ""
     if args:
-        key += smart_unicode(args)
+        key += smart_text(args)
     if kwargs:
-        key += smart_unicode(kwargs)
+        key += smart_text(kwargs)
     return key
 
 
 def _func_type(func):
     """ returns if callable is a function, method or a classmethod """
-    argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
+    try:
+        argnames = func.__code__.co_varnames[:func.__code__.co_argcount] # Python 3
+    except AttributeError:
+        argnames = func.func_code.co_varnames[:func.func_code.co_argcount] # Python 2
     if len(argnames) > 0:
         if argnames[0] == 'self':
             return 'method'
