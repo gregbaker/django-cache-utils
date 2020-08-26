@@ -44,7 +44,10 @@ def _func_info(func, args):
     'cls' and 'self' removed from normalized_args '''
 
     func_type = _func_type(func)
-    lineno = ":%s" % func.func_code.co_firstlineno
+    try:
+        lineno = ":%s" % func.__code__.co_firstlineno # Python 3
+    except AttributeError:
+        lineno = ":%s" % func.func_code.co_firstlineno # Python 2
 
     if func_type == 'function':
         name = ".".join([func.__module__, func.__name__]) + lineno
