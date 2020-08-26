@@ -11,7 +11,7 @@ def sanitize_memcached_key(key, max_length=200):
     """
     key = ''.join([c for c in key if c not in CONTROL_CHARACTERS])
     if len(key) > max_length:
-        hash = md5(key).hexdigest()
+        hash = md5(key.encode('utf-8')).hexdigest()
         key = key[:max_length-33]+'-'+hash
     return key
 
