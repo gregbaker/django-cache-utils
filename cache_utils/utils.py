@@ -1,18 +1,17 @@
-from hashlib import md5
+from hashlib import sha256
 from django.utils.encoding  import smart_text
 
 CONTROL_CHARACTERS = set([chr(i) for i in range(0,33)])
 CONTROL_CHARACTERS.add(chr(127))
 
-def sanitize_memcached_key(key, max_length=200):
+def sanitize_memcached_key(key, max_length=100):
     """ Removes control characters and ensures that key will
         not hit the memcached key length limit by replacing
         the key tail with md5 hash if key is too long.
     """
     key = ''.join([c for c in key if c not in CONTROL_CHARACTERS])
-    if len(key) > max_length:
-        hash = md5(key.encode('utf-8')).hexdigest()
-        key = key[:max_length-33]+'-'+hash
+    key = key.encode('utf8')
+    key = key[:max_length-65] + b'-' + sha256(key).hexdigest().encode('utf8')
     return key
 
 def _args_to_unicode(args, kwargs):
