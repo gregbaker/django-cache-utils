@@ -1,5 +1,5 @@
 from hashlib import sha256
-from django.utils.encoding  import smart_text
+from django.utils.encoding  import smart_str
 
 CONTROL_CHARACTERS = set([chr(i) for i in range(0,33)])
 CONTROL_CHARACTERS.add(chr(127))
@@ -17,9 +17,9 @@ def sanitize_memcached_key(key, max_length=100):
 def _args_to_unicode(args, kwargs):
     key = ""
     if args:
-        key += smart_text(args)
+        key += smart_str(args)
     if kwargs:
-        key += smart_text(kwargs)
+        key += smart_str(kwargs)
     return key
 
 
